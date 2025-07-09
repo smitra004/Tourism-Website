@@ -1,2 +1,2 @@
 # Tourism-Website
-Project work for adobe hackathon
+Project work for infosys hackathon
