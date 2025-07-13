@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VillageStay - Book Your Experience</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f6ee;
+      overflow-x: hidden;
+    }
+    .booking-section {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+      padding: 10rem 1rem;
+    }
+    .booking-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .form-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    }
+    .form-group label {
+      position: absolute;
+      top: -0.5rem;
+      left: 1rem;
+      background: white;
+      padding: 0 0.5rem;
+      font-size: 0.875rem;
+      color: #4b5563;
+      transition: all 0.3s ease;
+    }
+    .submit-btn {
+      background: linear-gradient(to right, #f59e0b, #d97706);
+      color: white;
+      padding: 0.75rem 1.5rem; /* e.g., 12px top/bottom and 24px left/right */
+      font-weight: 600;
+      border-radius: 9999px; /* fully rounded */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      animation: fadeIn 0.3s ease-out;
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      animation: slideUp 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #4b5563;
+      transition: color 0.3s ease;
+    }
+    .close-btn:hover {
+      color: #f59e0b;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .payment-option:hover {
+      border-color: #f59e0b;
+      background-color: #fff7ed;
+    }
+    .payment-option input {
+      margin-right: 0.5rem;
+    }
+    .error-message {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    .navbar {
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: rgba(0, 0, 0, 0.9);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar fixed w-full bg-gray-900 text-white p-4 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold">VillageStay</a>
+      <div class="hidden md:flex space-x-8">
+        <a href="index.html#home" class="hover:text-amber-300">Home</a>
+        <a href="index.html#experiences" class="hover:text-amber-300">Experiences</a>
+        <a href="index.html#culture" class="hover:text-amber-300">Culture</a>
+        <a href="index.html#reviews" class="hover:text-amber-300">Reviews</a>
+        <a href="index.html#contact" class="hover:text-amber-300">Contact</a>
+        <a href="#" class="hover:text-amber-300">Booking</a>
+      </div>
+      <div class="flex space-x-4">
+        <a href="#" onclick="showLoginModal()" class="bg-transparent hover:bg-amber-600 text-white px-4 py-2 rounded transition">Sign In</a>
+        <a href="#" onclick="showSignupModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition">Sign Up</a>
+      </div>
+      <button class="md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-gray-800 mt-2 p-4 rounded-lg">
+      <a href="index.html#home" class="block py-2 hover:text-amber-300">Home</a>
+      <a href="index.html#experiences" class="block py-2 hover:text-amber-300">Experiences</a>
+      <a href="index.html#culture" class="block py-2 hover:text-amber-300">Culture</a>
+      <a href="index.html#reviews" class="block py-2 hover:text-amber-300">Reviews</a>
+      <a href="index.html#contact" class="block py-2 hover:text-amber-300">Contact</a>
+      <a href="#" class="block py-2 hover:text-amber-300">Booking</a>
+      <div class="mt-4 pt-4 border-t border-gray-700">
+        <a href="#" onclick="showLoginModal()" class="block bg-transparent hover:bg-amber-600 text-white px-4 py-2 rounded transition text-center">Sign In</a>
+        <a href="#" onclick="showSignupModal()" class="block bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition text-center mt-2">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Booking Section -->
+  <section class="booking-section" >
+    <div class="booking-card">
+      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Book Your Village Experience</h2>
+      <form id="bookingForm" class="space-y-6">
+        <div class="form-group">
+          <label for="experience">Experience</label>
+          <select id="experience" required>
+            <option value="">Select an experience</option>
+            <option value="pottery" data-price="1500">Pottery Workshop in Majuli (₹1,500)</option>
+            <option value="farming" data-price="2000">Farm with Locals in Punjab (₹2,000)</option>
+            <option value="dance" data-price="800">Folk Dance Night in Rajasthan (₹800)</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="checkIn">From Date</label>
+            <input type="date" id="checkIn" required>
+          </div>
+          <div class="form-group">
+            <label for="checkOut">To Date</label>
+            <input type="date" id="checkOut" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="guests">Number of Guests</label>
+          <input type="number" id="guests" min="1" required>
+          <p id="guestsError" class="error-message">Please enter a valid number of guests.</p>
+        </div>
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+          <p id="phoneError" class="error-message">Please enter a valid phone number.</p>
+        </div>
+        <div class="text-center">
+          <p id="totalPrice" class="text-lg font-semibold text-gray-800 mb-4">Total: ₹0</p>
+          <button type="submit" class="submit-btn w-full py-3 rounded-lg text-lg font-semibold">Proceed to Payment</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('paymentModal')">&times;</span>
+      <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Complete Your Payment</h2>
+      <div id="paymentSummary" class="mb-6">
+        <p class="mb-2"><strong>Experience:</strong> <span id="summaryExperience"></span></p>
+        <p class="mb-2"><strong>Dates:</strong> <span id="summaryDates"></span></p>
+        <p class="mb-2"><strong>Guests:</strong> <span id="summaryGuests"></span></p>
+        <p class="mb-2"><strong>Total:</strong> ₹<span id="summaryTotal"></span></p>
+      </div>
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-gray-800">Select Payment Method</h3>
+        <div class="payment-option">
+          <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" required>
+          <label for="creditCard"><i class="fas fa-credit-card mr-2"></i>Credit/Debit Card</label>
+        </div>
+        <div class="payment-option">
+          <input type="radio" id="upi" name="paymentMethod" value="upi">
+          <label for="upi"><i class="fas fa-mobile-alt mr-2"></i>UPI</label>
+        </div>
+        <div class="payment-option">
+          <input type="radio" id="netBanking" name="paymentMethod" value="netBanking">
+          <label for="netBanking"><i class="fas fa-university mr-2"></i>Net Banking</label>
+        </div>
+        <button id="confirmPayment" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">Confirm Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+      <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Sign In</h2>
+      <form id="loginForm" class="space-y-4">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">Sign In</button>
+        <p class="text-center text-gray-600">Don't have an account? <a href="#" onclick="showSignupModal()" class="text-indigo-600">Sign up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
+      <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Sign Up</h2>
+      <form id="signupForm" class="space-y-4">
+        <div class="form-group">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" required>
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <input type="password" id="signupConfirmPassword" required>
+        </div>
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">Create Account</button>
+        <p class="text-center text-gray-600">Already have an account? <a href="#" onclick="showLoginModal()" class="text-indigo-600">Sign in</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    }
+
+    // Modal Functions
+    function showLoginModal() {
+      document.getElementById('loginModal').style.display = 'block';
+    }
+
+    function showSignupModal() {
+      document.getElementById('signupModal').style.display = 'block';
+      document.getElementById('loginModal').style.display = 'none';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+      }
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Form Validation and Total Price Calculation
+    const bookingForm = document.getElementById('bookingForm');
+    const experienceSelect = document.getElementById('experience');
+    const guestsInput = document.getElementById('guests');
+    const totalPriceDisplay = document.getElementById('totalPrice');
+    const checkInInput = document.getElementById('checkIn');
+    const checkOutInput = document.getElementById('checkOut');
+    const phoneInput = document.getElementById('phone');
+    const guestsError = document.getElementById('guestsError');
+    const phoneError = document.getElementById('phoneError');
+
+    function calculateTotal() {
+      const selectedOption = experienceSelect.options[experienceSelect.selectedIndex];
+      const pricePerPerson = selectedOption ? parseInt(selectedOption.getAttribute('data-price')) : 0;
+      const guests = parseInt(guestsInput.value) || 0;
+      const total = pricePerPerson * guests;
+      totalPriceDisplay.textContent = `Total: ₹${total.toLocaleString('en-IN')}`;
+    }
+
+    experienceSelect.addEventListener('change', calculateTotal);
+    guestsInput.addEventListener('input', calculateTotal);
+
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let isValid = true;
+
+      if (guestsInput.value <= 0) {
+        guestsError.style.display = 'block';
+        isValid = false;
+      } else {
+        guestsError.style.display = 'none';
+      }
+
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(phoneInput.value)) {
+        phoneError.style.display = 'block';
+        isValid = false;
+      } else {
+        phoneError.style.display = 'none';
+      }
+
+      if (checkInInput.value && checkOutInput.value && new Date(checkInInput.value) >= new Date(checkOutInput.value)) {
+        alert('Check-out date must be after check-in date.');
+        isValid = false;
+      }
+
+      if (isValid) {
+        const selectedOption = experienceSelect.options[experienceSelect.selectedIndex];
+        document.getElementById('summaryExperience').textContent = selectedOption.text;
+        document.getElementById('summaryDates').textContent = `${checkInInput.value} to ${checkOutInput.value}`;
+        document.getElementById('summaryGuests').textContent = guestsInput.value;
+        document.getElementById('summaryTotal').textContent = (parseInt(selectedOption.getAttribute('data-price')) * parseInt(guestsInput.value)).toLocaleString('en-IN');
+        document.getElementById('paymentModal').style.display = 'block';
+      }
+    });
+
+    // Payment Confirmation
+    document.getElementById('confirmPayment').addEventListener('click', function() {
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+      if (!paymentMethod) {
+        alert('Please select a payment method.');
+        return;
+      }
+      alert('Payment successful! Your booking is confirmed.');
+      document.getElementById('paymentModal').style.display = 'none';
+      bookingForm.reset();
+      totalPriceDisplay.textContent = 'Total: ₹0';
+    });
+
+    // Form Submissions for Login and Signup
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Login successful!');
+      closeModal('loginModal');
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Account created successfully!');
+      closeModal('signupModal');
+    });
+  </script>
+</body>
+</html>

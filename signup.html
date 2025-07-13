@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VillageStay - Create Your Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f6ee;
+      overflow-x: hidden;
+    }
+    .profile-section {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+      padding: 10rem 1rem;
+    }
+    .profile-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .form-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    }
+    .form-group label {
+      position: absolute;
+      top: -0.5rem;
+      left: 1rem;
+      background: white;
+      padding: 0 0.5rem;
+      font-size: 0.875rem;
+      color: #4b5563;
+      transition: all 0.3s ease;
+    }
+    .submit-btn {
+      background: linear-gradient(to right, #f59e0b, #d97706);
+      color: white;
+      padding: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    .error-message {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    .navbar {
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: rgba(0, 0, 0, 0.9);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .profile-picture {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .profile-picture img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #f59e0b;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInImage 0.5s ease-out;
+    }
+    .profile-picture img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    @keyframes fadeInImage {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .profile-picture .upload-area {
+      border: 2px dashed #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      background: #fff7ed;
+    }
+    .profile-picture .upload-area:hover {
+      border-color: #f59e0b;
+      background: #fef3c7;
+    }
+    .profile-picture .upload-area.dragover {
+      border-color: #f59e0b;
+      background: #fef3c7;
+      transform: scale(1.02);
+    }
+    .profile-picture input[type="file"] {
+      display: none;
+    }
+    .profile-picture .remove-btn {
+      margin-top: 0.5rem;
+      color: #dc2626;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .profile-picture .remove-btn:hover {
+      color: #b91c1c;
+    }
+    .profile-picture .error-message {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar fixed w-full bg-gray-900 text-white p-4 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold">VillageStay</a>
+      <div class="hidden md:flex space-x-8">
+        <a href="index.html#home" class="hover:text-amber-300">Home</a>
+        <a href="index.html#experiences" class="hover:text-amber-300">Experiences</a>
+        <a href="index.html#culture" class="hover:text-amber-300">Culture</a>
+        <a href="index.html#reviews" class="hover:text-amber-300">Reviews</a>
+        <a href="index.html#contact" class="hover:text-amber-300">Contact</a>
+        <a href="booking.html" class="hover:text-amber-300">Booking</a>
+      </div>
+      <div class="flex space-x-4">
+        <!-- <a href="#" onclick="alert('Please create a profile to log in.')" class="bg-transparent hover:bg-amber-600 text-white px-4 py-2 rounded transition">Sign In</a> -->
+        <!-- <a href="profile.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition">Create Profile</a> -->
+      </div>
+      <button class="md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-gray-800 mt-2 p-4 rounded-lg">
+      <a href="index.html#home" class="block py-2 hover:text-amber-300">Home</a>
+      <a href="index.html#experiences" class="block py-2 hover:text-amber-300">Experiences</a>
+      <a href="index.html#culture" class="block py-2 hover:text-amber-300">Culture</a>
+      <a href="index.html#reviews" class="block py-2 hover:text-amber-300">Reviews</a>
+      <a href="index.html#contact" class="block py-2 hover:text-amber-300">Contact</a>
+      <a href="booking.html" class="block py-2 hover:text-amber-300">Booking</a>
+      <div class="mt-4 pt-4 border-t border-gray-700">
+        <!-- <a href="#" onclick="alert('Please create a profile to log in.')" class="block bg-transparent hover:bg-amber-600 text-white px-4 py-2 rounded transition text-center">Sign In</a> -->
+        <a href="profile.html" class="block bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition text-center mt-2">Create Profile</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Creation Section -->
+  <section class="profile-section">
+    <div class="profile-card">
+      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Create Your Profile</h2>
+      <form id="profileForm" class="space-y-6">
+        <div class="profile-picture">
+          <img id="profilePreview" src="https://via.placeholder.com/100?text=Profile" alt="">
+          <div class="upload-area" id="uploadArea">
+            <i class="fas fa-camera fa-2x text-gray-500"></i>
+            <p class="text-sm text-gray-600 mt-2">Click or drag & drop to upload (Max 5MB)</p>
+            <input type="file" id="profilePicture" accept="image/jpeg,image/png,image/gif" hidden>
+          </div>
+          <span class="remove-btn" id="removeImage" style="display: none;">Remove Image</span>
+          <p id="imageError" class="error-message">Please upload a valid image (JPEG, PNG, GIF, max 5MB).</p>
+        </div>
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required>
+          <p id="nameError" class="error-message">Please enter a valid name.</p>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+          <p id="emailError" class="error-message">Please enter a valid email address.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <p id="passwordError" class="error-message">Password must be at least 8 characters long.</p>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" required>
+            <p id="confirmPasswordError" class="error-message">Passwords do not match.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+          <p id="phoneError" class="error-message">Please enter a valid phone number.</p>
+        </div>
+        <div class="form-group">
+          <label for="address">Address (Optional)</label>
+          <textarea id="address" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="preferences">Travel Preferences (Optional)</label>
+          <select id="preferences">
+            <option value="">Select your preference</option>
+            <option value="cultural">Cultural Experiences</option>
+            <option value="adventure">Adventure Activities</option>
+            <option value="relaxation">Relaxation & Nature</option>
+          </select>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="submit-btn w-full py-3 rounded-lg text-lg font-semibold">Create Profile</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Profile Picture Handling
+    const uploadArea = document.getElementById('uploadArea');
+    const profilePictureInput = document.getElementById('profilePicture');
+    const profilePreview = document.getElementById('profilePreview');
+    const removeImageBtn = document.getElementById('removeImage');
+    const imageError = document.getElementById('imageError');
+
+    // Click to trigger file input
+    uploadArea.addEventListener('click', () => profilePictureInput.click());
+
+    // Drag and Drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      handleImageUpload(file);
+    });
+
+    // File input change
+    profilePictureInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      handleImageUpload(file);
+    });
+
+    // Handle image upload
+    function handleImageUpload(file) {
+      if (file) {
+        // Validate file type and size
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (!validTypes.includes(file.type)) {
+          imageError.textContent = 'Please upload a JPEG, PNG, or GIF image.';
+          imageError.style.display = 'block';
+          return;
+        }
+        if (file.size > maxSize) {
+          imageError.textContent = 'Image size must be less than 5MB.';
+          imageError.style.display = 'block';
+          return;
+        }
+        imageError.style.display = 'none';
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePreview.src = e.target.result;
+          removeImageBtn.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Remove image
+    removeImageBtn.addEventListener('click', () => {
+      profilePreview.src = 'https://via.placeholder.com/100?text=Profile';
+      profilePictureInput.value = '';
+      removeImageBtn.style.display = 'none';
+      imageError.style.display = 'none';
+    });
+
+    // Form Validation
+    const profileForm = document.getElementById('profileForm');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const phoneInput = document.getElementById('phone');
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const phoneError = document.getElementById('phoneError');
+
+    profileForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let isValid = true;
+
+      // Name validation
+      if (fullNameInput.value.trim().length < 2) {
+        nameError.style.display = 'block';
+        isValid = false;
+      } else {
+        nameError.style.display = 'none';
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value)) {
+        emailError.style.display = 'block';
+        isValid = false;
+      } else {
+        emailError.style.display = 'none';
+      }
+
+      // Password validation
+      if (passwordInput.value.length < 8) {
+        passwordError.style.display = 'block';
+        isValid = false;
+      } else {
+        passwordError.style.display = 'none';
+      }
+
+      // Confirm password validation
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordError.style.display = 'block';
+        isValid = false;
+      } else {
+        confirmPasswordError.style.display = 'none';
+      }
+
+      // Phone validation (Indian format)
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneInput.value.match(phoneRegex)) {
+        phoneError.style.display = 'block';
+        isValid = false;
+      } else {
+        phoneError.style.display = 'none';
+      }
+
+      if (isValid) {
+        alert('Profile created successfully! You can now proceed to booking.');
+        window.location.href = 'booking.html';
+      }
+    });
+  </script>
+</body>
+</html>

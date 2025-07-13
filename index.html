@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VillageStay - Authentic Rural Tourism</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .ticket-modal {
+      border-left: 8px solid #f59e0b; /* Amber accent for ticket-like design */
+    }
+  </style>
+  <style>
+    /* Custom styles for Indian aesthetic and animations */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f6ee;
+    }
+    .hero-section {
+      background: url('rainforest-7350.gif') no-repeat center center;
+      background-size: cover;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-overlay {
+      background: rgba(0, 0, 0, 0.5);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+    .pattern-border {
+      border: 2px solid transparent;
+      border-image: url('https://i.gifer.com/7efs.gif') 30 stretch;
+    }
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .gif-animation, .section-image {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    footer a:hover {
+      color: #a5b4fc;
+    }
+    .navbar {
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: rgba(0, 0, 0, 0.9);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .ai-assistant {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .ai-assistant:hover {
+      transform: scale(1.1);
+    }
+    .ai-chat {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 300px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 1000;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+    }
+    .review-card {
+      transition: all 0.3s ease;
+    }
+    .review-card:hover {
+      transform: scale(1.03);
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .search-results {
+      display: none;
+      position: absolute;
+      width: 100%;
+      background: white;
+      z-index: 100;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .chat-message {
+      padding: 8px 12px;
+      margin: 4px;
+      border-radius: 18px;
+      max-width: 80%;
+    }
+    .user-message {
+      background-color: #3b82f6;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .ai-message {
+      background-color: #e5e7eb;
+      color: black;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-header {
+      background-color: #3b82f6;
+      color: white;
+      padding: 10px;
+      border-radius: 10px 10px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-body {
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+    }
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #e5e7eb;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      outline: none;
+    }
+    .chat-input button {
+      margin-left: 8px;
+      padding: 8px 12px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    /* Remove the pulse animation */
+    .search-bar {
+      transition: transform 0.3s ease; /* Smooth transition for hover effect */
+    }
+
+    /* Add hover effect */
+    .search-bar:hover {
+      transform: scale(1.05); /* Scales up slightly on hover */
+    }
+        .yt-preview {
+      position: relative;
+      cursor: pointer;
+      width: 100%;
+      max-width: 560px;  /* adjust as needed */
+      margin: auto;
+      overflow: hidden;
+      border-radius: 0.75rem; /* matches rounded-xl */
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* match shadow-xl */
+    }
+    .yt-preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .yt-preview .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: rgba(255,255,255,0.8);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+    
+  </style>
+  <style>
+/* Ensure modal fills screen and is scrollable if needed */
+#learnMoreModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* backdrop */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto; /* allow vertical scrolling */
+  padding: 2rem; /* spacing around modal content */
+}
+
+/* Style the inner content box */
+#learnMoreContent {
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  position: relative; /* Important for absolute children */
+}
+#learnMoreContent .close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: black;
+  color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#learnMoreContent .close-btn:hover {
+  background-color: #333;
+}
+
+
+</style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar fixed w-full bg-gray-900 text-white p-4 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold">VillageStay</a>
+      <div class="hidden md:flex space-x-8">
+        <a href="#home" class="hover:text-amber-300">Home</a>
+        <a href="#experiences" class="hover:text-amber-300">Experiences</a>
+        <a href="#culture" class="hover:text-amber-300">Culture</a>
+        <a href="#reviews" class="hover:text-amber-300">Reviews</a>
+        <a href="#contact" class="hover:text-amber-300">Contact</a>
+        <a href="booking.html" class="hover:text-amber-300">Booking</a>
+        
+      </div>
+      <div class="flex space-x-4">
+        <a href="#" onclick="showLoginModal()" class="bg-transparent hover:bg-amber-600 text-white px-4 py-2 rounded transition">Sign In</a>
+        <a href="#" onclick="showSignupModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition">Sign Up</a>
+      </div>
+      <button class="md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-gray-800 mt-2 p-4 rounded-lg">
+      <a href="#home" class="block py-2 hover:text-amber-300">Home</a>
+      <a href="#experiences" class="block py-2 hover:text-amber-300">Experiences</a>
+      <a href="#culture" class="block py-2 hover:text-amber-300">Culture</a>
+      <a href="#reviews" class="block py-2 hover:text-amber-300">Reviews</a>
+      <a href="#contact" class="block py-2 hover:text-amber-300">Contact</a>
+      <a href="booking.html" class="block py-2 hover:text-amber-300">Booking</a>
+      <div class="mt-4 pt-4 border-t border-gray-700">
+        <a href="#" onclick="showLoginModal()" class="block bg-transparent hover:bg-amber-600 text-white px-4 py-2 rounded transition text-center">Sign In</a>
+        <a href="#" onclick="showSignupModal()" class="block bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded transition text-center mt-2">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="hero-overlay text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4">VillageStay</h1>
+      <p class="text-lg md:text-2xl mb-6">Experience Authentic Rural India</p>
+      <div class="search-bar bg-white p-4 rounded-lg shadow-lg w-11/12 md:w-1/2 relative">
+        <input type="text" id="searchInput" placeholder="Search villages, experiences..." class="w-full p-2 rounded border-none focus:outline-none text-gray-800">
+        <div id="searchResults" class="search-results"></div>
+      </div>
+      <!-- <button id="goLiveBtn" class="mt-6 bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-full text-lg font-semibold transition">
+        Go Live
+      </button> -->
+      <!-- <audio id="welcomeAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> -->
+    </div>
+  </section>
+
+<!-- Quick Navigation Tiles -->
+  <section class="py-12 bg-green-50">
+    <div class="container mx-auto px-4 grid grid-cols-2 md:grid-cols-5 gap-6">
+      <!-- Stay -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://media.giphy.com/media/3o7TKz9z7qZ2Z2Z2Z2/giphy.gif" alt="Stay" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Stay</h3>
+        <p class="text-sm text-gray-600 flex-grow">Sleep in cozy village homes and wake to nature's soundtrack.</p>
+        <button onclick="showModal('stay')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Eat -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Eat" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Eat</h3>
+        <p class="text-sm text-gray-600 flex-grow">Taste home-cooked meals made from fresh, local ingredients.</p>
+        <button onclick="showModal('eat')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Explore -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Explore" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Explore</h3>
+        <p class="text-sm text-gray-600 flex-grow">Wander lush fields, ancient temples, and vibrant markets.</p>
+        <button onclick="showModal('explore')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Crafts -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Crafts" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Crafts</h3>
+        <p class="text-sm text-gray-600 flex-grow">Join pottery or weaving workshops and take home your creation.</p>
+        <button onclick="showModal('crafts')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Events -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg" alt="Events" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Events</h3>
+        <p class="text-sm text-gray-600 flex-grow">Celebrate Holi, Diwali, and local festivals with the community.</p>
+        <button onclick="showModal('events')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Adventure -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Adventure" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Adventure</h3>
+        <p class="text-sm text-gray-600 flex-grow">Embark on thrilling treks and river rafting in scenic valleys.</p>
+        <button onclick="showModal('adventure')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Culture -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Culture" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Culture</h3>
+        <p class="text-sm text-gray-600 flex-grow">Immerse in local traditions, music, and dance performances.</p>
+        <button onclick="showModal('culture')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Relax -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="relax.jpg" alt="Relax" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Relax</h3>
+        <p class="text-sm text-gray-600 flex-grow">Unwind with yoga retreats and serene countryside views.</p>
+        <button onclick="showModal('relax')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Learn -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Learn" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Learn</h3>
+        <p class="text-sm text-gray-600 flex-grow">Discover local history and skills through guided workshops.</p>
+        <button onclick="showModal('learn')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+
+      <!-- Connect -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow text-center flex flex-col h-[300px]">
+        <img src="connect.jpg" alt="Learn" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="font-semibold mb-2">Connect</h3>
+        <p class="text-sm text-gray-600 flex-grow">Bond with locals over shared meals and storytelling sessions.</p>
+        <button onclick="showModal('connect')" class="text-amber-600 text-sm font-medium mt-2">Learn More →</button>
+      </div>
+    </div>
+
+    <!-- Modal Popups -->
+    <div id="modal-stay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('stay')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://media.giphy.com/media/3o7TKz9z7qZ2Z2Z2Z2/giphy.gif" alt="Stay" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Stay in Village Homes</h3>
+        <p class="text-gray-600 mb-4">Immerse yourself in the charm of rural India by staying in authentic, eco-friendly village homes. These accommodations, ranging from traditional mud houses to restored heritage havelis, offer a unique blend of comfort and cultural heritage. Wake up to the soothing sounds of nature, enjoy warm hospitality from local families, and experience a lifestyle deeply connected to the land.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Stay in mud houses or heritage havelis with traditional designs</li>
+          <li>Organic breakfast made with local ingredients included</li>
+          <li>Guided village tours to explore nearby cultural sites</li>
+          <li>Evening bonfires and storytelling with hosts</li>
+          <li>Access to community gardens and local farms</li>
+        </ul>
+        <button onclick="hideModal('stay')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-eat" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('eat')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Eat" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Authentic Home-Cooked Meals</h3>
+        <p class="text-gray-600 mb-4">Delight your taste buds with traditional Indian meals crafted by local families using fresh, farm-sourced ingredients. From aromatic curries to freshly baked naan, each dish tells a story of regional culinary traditions. Join cooking sessions to learn family recipes and dine with the community for a truly immersive experience.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Learn traditional recipes in hands-on cooking classes</li>
+          <li>Vegetarian, vegan, and gluten-free options available</li>
+          <li>Dine with locals in communal settings</li>
+          <li>Explore local spice markets with your hosts</li>
+          <li>Seasonal menus featuring regional specialties</li>
+        </ul>
+        <button onclick="hideModal('eat')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-explore" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('explore')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Explore" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Explore Rural Landscapes</h3>
+        <p class="text-gray-600 mb-4">Venture into the heart of rural India with guided tours that showcase breathtaking landscapes, ancient temples, and vibrant local markets. Wander through lush green fields, visit historical sites, and interact with artisans selling handmade crafts. These explorations offer a deep connection to the culture and natural beauty of village life.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Visit ancient temples and historical landmarks</li>
+          <li>Shop for unique handmade souvenirs in local markets</li>
+          <li>Guided nature walks through scenic trails</li>
+          <li>Learn about local flora and fauna from experts</li>
+          <li>Evening cultural performances at village squares</li>
+        </ul>
+        <button onclick="hideModal('explore')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-crafts" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('crafts')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Crafts" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Craft Workshops</h3>
+        <p class="text-gray-600 mb-4">Unleash your creativity in hands-on workshops led by skilled artisans. Learn the art of pottery, weaving, or block printing, and create your own unique keepsake. These sessions provide insights into traditional techniques passed down through generations, suitable for all skill levels, with all materials provided.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>All materials and tools provided for crafting</li>
+          <li>Suitable for beginners and experienced crafters</li>
+          <li>Take home your handcrafted creation</li>
+          <li>Learn about the cultural significance of crafts</li>
+          <li>One-on-one guidance from master artisans</li>
+        </ul>
+        <button onclick="hideModal('crafts')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-events" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('events')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg" alt="Events" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Local Festivals & Events</h3>
+        <p class="text-gray-600 mb-4">Immerse yourself in the vibrant energy of Indian festivals like Holi, Diwali, or local harvest celebrations. Participate in traditional rituals, enjoy live music and dance performances, and connect with the community through shared festivities that highlight the rich cultural heritage of rural India.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Participate in colorful traditional rituals</li>
+          <li>Enjoy live music and dance performances</li>
+          <li>Festival attire and materials provided</li>
+          <li>Learn the history behind each celebration</li>
+          <li>Join community feasts and firework displays</li>
+        </ul>
+        <button onclick="hideModal('events')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-adventure" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('adventure')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Adventure" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Adventure Activities</h3>
+        <p class="text-gray-600 mb-4">Embark on exhilarating adventures through rural India's stunning landscapes. Enjoy guided treks across lush valleys, thrilling river rafting on pristine waters, or cycling tours through picturesque villages. Led by local experts, these activities are designed for all fitness levels with safety as a priority.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Guided treks with experienced local guides</li>
+          <li>Safety equipment provided for all activities</li>
+          <li>Suitable for beginners and seasoned adventurers</li>
+          <li>Explore hidden trails and scenic viewpoints</li>
+          <li>Evening campfire gatherings post-adventure</li>
+        </ul>
+        <button onclick="hideModal('adventure')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-culture" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('culture')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Culture" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Cultural Immersion</h3>
+        <p class="text-gray-600 mb-4">Dive deep into the vibrant culture of rural India through immersive experiences. Learn traditional dance moves, attend live music performances, and participate in storytelling sessions led by local artists and historians. These activities offer a profound connection to the region's heritage and traditions.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Learn traditional dance moves with local performers</li>
+          <li>Attend live folk music performances</li>
+          <li>Engage in storytelling sessions with historians</li>
+          <li>Participate in cultural workshops and demonstrations</li>
+          <li>Access to local art galleries and exhibitions</li>
+        </ul>
+        <button onclick="hideModal('culture')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-relax" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('relax')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="relax.jpg" alt="Relax" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Relax & Rejuvenate</h3>
+        <p class="text-gray-600 mb-4">Escape the hustle of daily life with serene yoga retreats and meditation sessions set against the backdrop of tranquil countryside views. Stay in peaceful homestays, practice mindfulness with expert instructors, and reconnect with nature through guided walks and wellness activities tailored for relaxation.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Daily yoga and meditation classes with certified instructors</li>
+          <li>Guided nature walks through serene landscapes</li>
+          <li>Relax in eco-friendly homestays with tranquil views</li>
+          <li>Wellness workshops on mindfulness and stress relief</li>
+          <li>Access to herbal tea sessions and spa treatments</li>
+        </ul>
+        <button onclick="hideModal('relax')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-learn" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('learn')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Learn" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Learn Local Skills</h3>
+        <p class="text-gray-600 mb-4">Engage in enriching workshops to learn about local history, sustainable farming, and traditional crafts from village experts. From hands-on sessions on organic agriculture to exploring the stories behind ancient artifacts, these experiences deepen your understanding of rural India's heritage and practices.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Hands-on workshops on local history and culture</li>
+          <li>Learn sustainable farming techniques from experts</li>
+          <li>Certificate of participation for each workshop</li>
+          <li>Visits to historical archives and museums</li>
+          <li>Interactive sessions with local scholars</li>
+        </ul>
+        <button onclick="hideModal('learn')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+
+    <div id="modal-connect" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full ticket-modal relative">
+        <button onclick="hideModal('connect')" class="absolute top-4 right-4 bg-amber-800 text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-amber-900 transition-colors text-lg font-bold">✕</button>
+        <img src="connect.jpg" alt="Connect" class="mx-auto mb-4 h-24 w-24 object-cover rounded-full">
+        <h3 class="text-xl font-bold mb-4">Connect with Locals</h3>
+        <p class="text-gray-600 mb-4">Forge meaningful connections with rural communities through shared meals, storytelling evenings, and interactive cultural activities. Sit down with local families to share stories, participate in village traditions, and build lasting memories through authentic cultural exchanges that celebrate togetherness.</p>
+        <ul class="text-sm text-gray-600 mb-4 list-disc list-inside">
+          <li>Evening storytelling sessions with local families</li>
+          <li>Shared meals featuring regional cuisines</li>
+          <li>Cultural exchange activities and games</li>
+          <li>Participate in community projects and events</li>
+          <li>Learn local dialects and phrases from hosts</li>
+        </ul>
+        <button onclick="hideModal('connect')" class="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors">Close</button>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="py-12 bg-amber-50" id="experiences">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-8">Discover Experiences</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Pottery Workshop -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+        <img src="Pottery-blog_0011.jpg" alt="Pottery Workshop" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Pottery Workshop</h3>
+          <p class="text-gray-500 mb-4">Create with clay in Majuli, Assam</p>
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-amber-600 font-bold">₹1,500/person</span>
+            <span class="text-sm text-gray-500">2 days</span>
+          </div>
+          <button onclick="showLearnMore('pottery')" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+            Learn More
+          </button>
+        </div>
+      </div>
+      
+      <!-- Farm with Locals -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+        <img src="India_Farming.jpg" alt="Farming Experience" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Farm with Locals</h3>
+          <p class="text-gray-500 mb-4">Hands‑on farming in Punjab</p>
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-amber-600 font-bold">₹2,000/person</span>
+            <span class="text-sm text-gray-500">3 days</span>
+          </div>
+          <button onclick="showLearnMore('farming')" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+            Learn More
+          </button>
+        </div>
+      </div>
+      
+      <!-- Folk Dance Night -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+        <img src="Folk Dance.jpg" alt="Folk Dance Night" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Folk Dance Night</h3>
+          <p class="text-gray-500 mb-4">Rhythms of Rajasthan</p>
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-amber-600 font-bold">₹800/person</span>
+            <span class="text-sm text-gray-500">Evening</span>
+          </div>
+          <button onclick="showLearnMore('dance')" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+            Learn More
+          </button>
+        </div>
+      </div>
+
+      <!-- Weaving Experience -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+  <img src="Weave in Nagaland.jpg" alt="Weaving Experience" class="w-full h-48 object-cover">
+  <div class="p-6">
+    <h3 class="text-xl font-semibold mb-2">Weave in Nagaland</h3>
+    <p class="text-gray-500 mb-4">Traditional loom weaving with Naga women</p>
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-amber-600 font-bold">₹1,200/person</span>
+      <span class="text-sm text-gray-500">2 days</span>
+    </div>
+    <button onclick="showLearnMore('weaving')" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+      Learn More
+    </button>
+  </div>
+</div>
+<!-- Tea Experience -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+  <img src="Tea Plucking in Darjeeling.jpg" alt="Tea Experience" class="w-full h-48 object-cover">
+  <div class="p-6">
+    <h3 class="text-xl font-semibold mb-2">Tea Plucking in Darjeeling</h3>
+    <p class="text-gray-500 mb-4">Live a day in the tea gardens</p>
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-amber-600 font-bold">₹1,000/person</span>
+      <span class="text-sm text-gray-500">1 day</span>
+    </div>
+    <button onclick="showLearnMore('tea')" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+      Learn More
+    </button>
+  </div>
+</div>
+<!-- Cooking Class -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+  <img src="Cook with Grandmas.jpg" alt="Cooking Class" class="w-full h-48 object-cover">
+  <div class="p-6">
+    <h3 class="text-xl font-semibold mb-2">Cook with Grandmas</h3>
+    <p class="text-gray-500 mb-4">Learn heirloom recipes in Tamil Nadu</p>
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-amber-600 font-bold">₹1,300/person</span>
+      <span class="text-sm text-gray-500">Half-day</span>
+    </div>
+    <button onclick="showLearnMore('cooking')" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+      Learn More
+    </button>
+  </div>
+</div>
+
+    </div>
+  </div>
+</section>
+
+  
+  <!-- Cultural Highlights -->
+  <!-- Cultural Highlights Section -->
+<section class="py-12 bg-indigo-50" id="culture">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-10">Cultural Highlights</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Festivals Calendar -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow">
+        <div class="h-48 bg-gray-100 overflow-hidden">
+          <img src="https://media.giphy.com/media/KzEVIoqMCZeNjJOzHj/giphy.gif" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="text-xl font-semibold mb-2">Festivals Calendar</h3>
+          <p class="text-gray-500 mb-4">Upcoming village celebrations</p>
+          <a href="javascript:void(0)" onclick="showCultureModal('calendar')" class="text-indigo-600 font-medium">View Calendar →</a>
+        </div>
+      </div>
+
+      <!-- Tourist Stories -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow">
+        <div class="h-48 bg-gray-100 overflow-hidden">
+          <img src="https://media.giphy.com/media/qwL7UCVtD8pNJFmkxA/giphy.gif" alt="Tourist Stories" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="text-xl font-semibold mb-2">Tourist Stories</h3>
+          <p class="text-gray-500 mb-4">Real tales from local stays</p>
+          <a href="javascript:void(0)" onclick="showCultureModal('stories')" class="text-indigo-600 font-medium">Read Stories →</a>
+        </div>
+      </div>
+
+      <!-- Meet the Farmer -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow">
+        <div class="h-48 bg-gray-100 overflow-hidden">
+          <img src="https://media.giphy.com/media/BkfLtyeJRsfB79RUBm/giphy.gif" alt="Meet the Farmer" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 text-center">
+          <h3 class="text-xl font-semibold mb-2">Meet the Farmer</h3>
+          <p class="text-gray-500 mb-4">Stories of sustainable farming</p>
+          <a href="javascript:void(0)" onclick="showCultureModal('farmer')" class="text-indigo-600 font-medium">Meet Them →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div id="cultureModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4 overflow-auto">
+  <div id="cultureModalContent" class="relative bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl">
+    <button onclick="closeCultureModal()" class="absolute top-4 right-4 bg-black text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-800 transition">✕</button>
+    <!-- Dynamic content inserted here -->
+  </div>
+</div>
+
+
+
+  <!-- Video and Reviews Section -->
+<section class="py-16 bg-gradient-to-br from-white via-slate-50 to-slate-100" id="reviews">
+  <div class="container mx-auto px-6 md:px-12">
+    <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-12">Experience Village Life</h2>
+    
+    <!-- Video Section -->
+    <div class="max-w-4xl mx-auto relative group cursor-pointer transition-transform duration-300 transform hover:scale-105">
+      <a href="https://www.youtube.com/watch?v=eV3x4E-hp5w" target="_blank" class="block relative">
+        <img src="https://img.youtube.com/vi/eV3x4E-hp5w/hqdefault.jpg" alt="Video preview"
+             class="rounded-2xl shadow-xl w-full object-cover transition-opacity duration-300 group-hover:opacity-90">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="bg-white bg-opacity-75 rounded-full p-4 shadow-lg hover:scale-110 transition">
+            <svg class="w-10 h-10 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M4.5 3.5a1 1 0 011.64-.77l10.18 7.27a1 1 0 010 1.6L6.14 18.87A1 1 0 014.5 18V3.5z"/>
+            </svg>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+  <section class="bg-gradient-to-br from-white via-slate-50 to-slate-100 py-16 px-6 md:px-12">
+  <h3 class="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-12 tracking-tight">What Our Guests Say</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    
+    <!-- Review 1 -->
+    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+      <div class="flex items-center mb-4">
+        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah" class="w-14 h-14 rounded-full border-2 border-amber-400 shadow mr-4">
+        <div>
+          <h4 class="font-semibold text-lg text-gray-800">Sarah K.</h4>
+          <div class="flex text-amber-400">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-600 italic leading-relaxed">"The pottery workshop in Majuli was transformative. The artisans' patience and skill made it an unforgettable experience."</p>
+    </div>
+
+    <!-- Review 2 -->
+    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+      <div class="flex items-center mb-4">
+        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael" class="w-14 h-14 rounded-full border-2 border-amber-400 shadow mr-4">
+        <div>
+          <h4 class="font-semibold text-lg text-gray-800">Michael T.</h4>
+          <div class="flex text-amber-400">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current opacity-50" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-600 italic leading-relaxed">"Staying with a farming family in Punjab gave me a new appreciation for where our food comes from. The hospitality was incredible."</p>
+    </div>
+
+    <!-- Review 3 -->
+    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+      <div class="flex items-center mb-4">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya" class="w-14 h-14 rounded-full border-2 border-amber-400 shadow mr-4">
+        <div>
+          <h4 class="font-semibold text-lg text-gray-800">Priya M.</h4>
+          <div class="flex text-amber-400">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09L5.64 12.09 1 7.91l6.06-.91L10 2l2.94 5 6.06.91-4.64 4.18 1.518 5.998z"/></svg>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-600 italic leading-relaxed">"The folk dance night under the stars in Rajasthan was magical. The energy and colors will stay with me forever."</p>
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- Contacts Footer -->
+  <footer class="py-8 bg-gray-800 text-white" id="contact">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Contact Us</h3>
+          <p>VillageStay HQ</p>
+          <p>New Delhi, India</p>
+          <p>Phone: +91-1234567890</p>
+          <p>Email: contact@villagestay.com</p>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Follow Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="text-white hover:text-indigo-300"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white hover:text-indigo-300"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white hover:text-indigo-300"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Quick Links</h3>
+          <ul class="list-none">
+            <li><a href="#home" class="text-white hover:text-indigo-300">Home</a></li>
+            <li><a href="#experiences" class="text-white hover:text-indigo-300">Experiences</a></li>
+            <li><a href="#culture" class="text-white hover:text-indigo-300">Culture</a></li>
+            <li><a href="#contact" class="text-white hover:text-indigo-300">Contact</a></li>
+            <li><a href="booking.html" class="text-white hover:text-indigo-300">Booking</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Copyright Notice -->
+  <div class="text-center py-4 bg-gray-900 text-white">
+    <p>© 2025 VillageStay. All rights reserved.</p>
+  </div>
+
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="modal">
+    <div class="modal-content">
+      <span class="close absolute top-2 right-4 text-2xl cursor-pointer" onclick="closeModal('bookingModal')">&times;</span>
+      <h2 class="text-2xl font-bold mb-6 text-center">Book Your Village Experience</h2>
+      <form id="bookingForm" class="space-y-4">
+        <div>
+          <label for="experience" class="block mb-1 font-medium">Experience</label>
+          <select id="experience" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+            <option value="">Select an experience</option>
+            <option value="pottery">Pottery Workshop in Majuli (₹1,500)</option>
+            <option value="farming">Farm with Locals in Punjab (₹2,000)</option>
+            <option value="dance">Folk Dance Night in Rajasthan (₹800)</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="checkIn" class="block mb-1 font-medium">From Date</label>
+            <input type="date" id="checkIn" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+          </div>
+          <div>
+            <label for="checkOut" class="block mb-1 font-medium">To Date</label>
+            <input type="date" id="checkOut" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+          </div>
+        </div>
+        <div>
+          <label for="guests" class="block mb-1 font-medium">Number of Guests</label>
+          <input type="number" id="guests" min="1" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+        <div>
+          <label for="fullName" class="block mb-1 font-medium">Full Name</label>
+          <input type="text" id="fullName" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+        <div>
+          <label for="email" class="block mb-1 font-medium">Email</label>
+          <input type="email" id="email" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+        <div>
+          <label for="phone" class="block mb-1 font-medium">Phone Number</label>
+          <input type="tel" id="phone" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+          Confirm Booking
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Learn More Modal -->
+  <div id="learnMoreModal" class="modal">
+    <div class="modal-content">
+      <span class="close absolute top-2 right-4 text-2xl cursor-pointer" onclick="closeModal('learnMoreModal')">&times;</span>
+      <div id="learnMoreContent">
+        <!-- Content will be loaded here dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close absolute top-2 right-4 text-2xl cursor-pointer" onclick="closeModal('loginModal')">&times;</span>
+      <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label for="loginEmail" class="block mb-1 font-medium">Email</label>
+          <input type="email" id="loginEmail" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+        <div>
+          <label for="loginPassword" class="block mb-1 font-medium">Password</label>
+          <input type="password" id="loginPassword" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+          Sign In
+        </button>
+        <p class="text-center text-gray-600">Don't have an account? <a href="#" onclick="showSignupModal()" class="text-indigo-600">Sign up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  
+
+  <!-- AI Assistant Button -->
+  <div class="ai-assistant bg-indigo-600 text-white p-4 rounded-full shadow-lg" onclick="toggleChat()">
+    <i class="fas fa-robot text-2xl"></i>
+  </div>
+
+  <!-- AI Chat Window -->
+  <div id="aiChat" class="ai-chat">
+    <div class="chat-header">
+      <span>VillageStay Assistant</span>
+      <button onclick="toggleChat()" class="text-white">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="ai-message chat-message">
+        Hi there! I'm your VillageStay assistant. How can I help you today?
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Type your message..." class="focus:outline-none">
+      <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    }
+
+    // Modal Functions
+    function showLoginModal() {
+      document.getElementById('loginModal').style.display = 'block';
+    }
+
+    function showSignupModal() {
+      window.location.href = 'signup.html';
+    }
+
+
+
+    // Form Submissions
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Booking submitted successfully! We will contact you shortly.');
+      closeModal('bookingModal');
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Login successful!');
+      closeModal('loginModal');
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Account created successfully!');
+      closeModal('signupModal');
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+
+    // Search Functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchResults = document.getElementById('searchResults');
+      const query = this.value.toLowerCase();
+      
+      if (query.length > 2) {
+        // Simulate search results
+        const results = [
+          'Pottery Workshop in Majuli',
+          'Farm Stay in Punjab',
+          'Folk Dance in Rajasthan',
+          'Village Homestay in Kerala',
+          'Weaving Workshop in Gujarat'
+        ].filter(item => item.toLowerCase().includes(query));
+        
+        let html = '';
+        results.forEach(result => {
+          html += `<div class="p-3 hover:bg-gray-100 cursor-pointer">${result}</div>`;
+        });
+        
+        searchResults.innerHTML = html;
+        searchResults.style.display = 'block';
+      } else {
+        searchResults.style.display = 'none';
+      }
+    });
+
+    // Close search results when clicking outside
+    document.addEventListener('click', function(e) {
+      if (e.target.id !== 'searchInput') {
+        document.getElementById('searchResults').style.display = 'none';
+      }
+    });
+
+    // AI Chat Functions
+    function toggleChat() {
+      const chat = document.getElementById('aiChat');
+      chat.style.display = chat.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      const chatBody = document.getElementById('chatBody');
+      
+      if (message) {
+        // Add user message
+        const userDiv = document.createElement('div');
+        userDiv.className = 'user-message chat-message';
+        userDiv.textContent = message;
+        chatBody.appendChild(userDiv);
+        
+        // Clear input
+        input.value = '';
+        
+        // Simulate AI response
+        setTimeout(() => {
+          const aiDiv = document.createElement('div');
+          aiDiv.className = 'ai-message chat-message';
+          
+          // Simple response logic
+          if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
+            aiDiv.textContent = 'Hello! How can I help you with your VillageStay experience?';
+          } else if (message.toLowerCase().includes('pottery')) {
+            aiDiv.textContent = 'Our pottery workshop in Majuli is a 2-day immersive experience where you\'ll learn traditional techniques from master artisans. Would you like more details?';
+          } else if (message.toLowerCase().includes('farm')) {
+            aiDiv.textContent = 'The farming experience in Punjab lets you participate in authentic agricultural activities. It includes 3 days of hands-on farming with local families.';
+          } else if (message.toLowerCase().includes('dance')) {
+            aiDiv.textContent = 'The folk dance night in Rajasthan features traditional performances under the stars. You can even learn some dance steps yourself!';
+          } else {
+            aiDiv.textContent = 'I can help you with information about our village experiences, bookings, or general inquiries. What would you like to know?';
+          }
+          
+          chatBody.appendChild(aiDiv);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }, 1000);
+      }
+    }
+  </script>
+  <script>
+    function showModal(id) {
+      const modal = document.getElementById(`modal-${id}`);
+      modal.classList.remove('hidden');
+    }
+
+    function hideModal(id) {
+      const modal = document.getElementById(`modal-${id}`);
+      modal.classList.add('hidden');
+    }
+  </script>
+<script>
+  function showLearnMore(experience) {
+    const modal = document.getElementById('learnMoreModal');
+    const content = document.getElementById('learnMoreContent');
+    
+    let html = '';
+    if (experience === 'pottery') {
+      html = `
+        <button onclick="closeModal('learnMoreModal')" class="close-btn">✕</button>
+ 
+        <h3 class="text-2xl font-bold mb-4">Pottery Workshop in Majuli</h3>
+        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Pottery Workshop" class="w-full h-48 object-cover mb-4 rounded-lg">
+        <p class="mb-4">Experience the ancient art of pottery making with master artisans in Majuli, the world's largest river island. Learn traditional techniques passed down through generations, from shaping clay on a potter's wheel to firing your creations in a traditional kiln. This hands-on workshop offers a deep dive into Assam's rich craft heritage.</p>
+        <p class="mb-4"><strong>Duration:</strong> 2 days</p>
+        <p class="mb-4"><strong>Price:</strong> ₹1,500 per person</p>
+        <p class="mb-4"><strong>Includes:</strong> All materials, lunch, and a finished piece to take home</p>
+        <button onclick="document.getElementById('bookingModal').style.display='block'; closeModal('learnMoreModal');" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+          Book Now
+        </button>
+      `;
+    } else if (experience === 'farming') {
+      html = `
+      <button onclick="closeModal('learnMoreModal')" class="close-btn">✕</button>
+
+        <h3 class="text-2xl font-bold mb-4">Farm with Locals in Punjab</h3>
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Farming" class="w-full h-48 object-cover mb-4 rounded-lg">
+        <p class="mb-4">Get hands-on experience with traditional farming methods in the fertile lands of Punjab. Participate in seasonal activities like sowing, harvesting, or milking, guided by local farmers. Learn about sustainable agriculture and enjoy farm-fresh meals while connecting with the heart of rural India.</p>
+        <p class="mb-4"><strong>Duration:</strong> 3 days</p>
+        <p class="mb-4"><strong>Price:</strong> ₹2,000 per person</p>
+        <p class="mb-4"><strong>Includes:</strong> Accommodation, all meals, and farming activities</p>
+        <button onclick="document.getElementById('bookingModal').style.display='block'; closeModal('learnMoreModal');" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+          Book Now
+        </button>
+      `;
+    } else if (experience === 'dance') {
+      html = `
+      <button onclick="closeModal('learnMoreModal')" class="close-btn">✕</button>
+
+        <h3 class="text-2xl font-bold mb-4">Folk Dance Night in Rajasthan</h3>
+        <img src="https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Folk Dance Night" class="w-full h-48 object-cover mb-4 rounded-lg">
+        <p class="mb-4">Immerse yourself in the vibrant folk traditions of Rajasthan with an evening of dance and music under the stars. Learn basic steps of traditional dances like Ghoomar and Kalbeliya, guided by local performers. Enjoy authentic Rajasthani cuisine and connect with the community in a festive atmosphere.</p>
+        <p class="mb-4"><strong>Duration:</strong> 1 evening (4 hours)</p>
+        <p class="mb-4"><strong>Price:</strong> ₹800 per person</p>
+        <p class="mb-4"><strong>Includes:</strong> Performance, light dinner, and participation</p>
+        <button onclick="document.getElementById('bookingModal').style.display='block'; closeModal('learnMoreModal');" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+          Book Now
+        </button>
+      `;
+    } else if (experience === 'weaving') {
+  html = `
+      <button onclick="closeModal('learnMoreModal')" class="close-btn">✕</button>
+  
+    <h3 class="text-2xl font-bold mb-4">Traditional Weaving in Nagaland</h3>
+    <img src="Weave in Nagaland.jpg" alt="Weaving Workshop" class="w-full h-48 object-cover mb-4 rounded-lg">
+    <p class="mb-4">Learn age-old weaving practices on a backstrap loom with skilled Naga women artisans. Discover patterns, yarn dyeing, and techniques passed through generations, all while creating your own scarf or sash.</p>
+    <p class="mb-4"><strong>Duration:</strong> 2 days</p>
+    <p class="mb-4"><strong>Price:</strong> ₹1,200 per person</p>
+    <p class="mb-4"><strong>Includes:</strong> Materials, meals, and a handmade souvenir</p>
+    <button onclick="document.getElementById('bookingModal').style.display='block'; closeModal('learnMoreModal');" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+      Book Now
+    </button>
+  `;
+    } else if (experience === 'tea') {
+  html = `
+      <button onclick="closeModal('learnMoreModal')" class="close-btn">✕</button>
+
+    <h3 class="text-2xl font-bold mb-4">Tea Plucking in Darjeeling</h3>
+    <img src="Tea Plucking in Darjeeling.jpg" alt="Tea Experience" class="w-full h-48 object-cover mb-4 rounded-lg">
+    <p class="mb-4">Walk through misty hills of Darjeeling and pick tea leaves alongside experienced pluckers. Learn how tea is processed, taste fresh brews, and enjoy a scenic lunch with views of Kanchenjunga.</p>
+    <p class="mb-4"><strong>Duration:</strong> 1 day</p>
+    <p class="mb-4"><strong>Price:</strong> ₹1,000 per person</p>
+    <p class="mb-4"><strong>Includes:</strong> Tea tour, lunch, tasting session</p>
+    <button onclick="document.getElementById('bookingModal').style.display='block'; closeModal('learnMoreModal');" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+      Book Now
+    </button>
+  `;
+} else if (experience === 'cooking') {
+  html = `
+      <button onclick="closeModal('learnMoreModal')" class="close-btn">✕</button>
+
+    <h3 class="text-2xl font-bold mb-4">Cook with Grandmas in Tamil Nadu</h3>
+    <img src="Cook with Grandmas.jpg" alt="Cooking Experience" class="w-full h-48 object-cover mb-4 rounded-lg">
+    <p class="mb-4">Join warm village grandmothers in their kitchens to prepare age-old Tamil dishes. Learn techniques, listen to stories, and sit down for a soulful traditional meal prepared by your own hands.</p>
+    <p class="mb-4"><strong>Duration:</strong> Half-day (5 hours)</p>
+    <p class="mb-4"><strong>Price:</strong> ₹1,300 per person</p>
+    <p class="mb-4"><strong>Includes:</strong> Ingredients, full meal, recipe card</p>
+    <button onclick="document.getElementById('bookingModal').style.display='block'; closeModal('learnMoreModal');" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+      Book Now
+    </button>
+  `;}
+    
+    
+    content.innerHTML = html;
+    modal.style.display = 'block';
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+
+  // Close modals when clicking outside
+  window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+      event.target.style.display = 'none';
+    }
+  }
+</script>
+
+<style>
+  .modal {
+    display: none;
+  }
+</style>
+<script>
+  function showCultureModal(type) {
+    const modal = document.getElementById('cultureModal');
+    const contentBox = document.getElementById('cultureModalContent');
+
+    let html = '';
+    if (type === 'calendar') {
+      html = `
+        <img src="https://media.giphy.com/media/KzEVIoqMCZeNjJOzHj/giphy.gif" class="w-full h-48 object-cover rounded-lg mb-4">
+        <h3 class="text-2xl font-bold mb-4">Village Festivals Calendar</h3>
+        <p class="text-gray-700 mb-3">Experience vibrant festivals like Holi, Bihu, Onam, and Pongal celebrated in their most authentic forms. Here’s what’s coming up:</p>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
+          <li><strong>15 Aug:</strong> Independence Day Cultural Parade</li>
+          <li><strong>29 Sept:</strong> Harvest Festival in Punjab</li>
+          <li><strong>12 Oct:</strong> Dussehra in Kullu Valley</li>
+          <li><strong>4 Nov:</strong> Diwali Celebrations in Gujarat</li>
+        </ul>
+        <p class="text-sm text-gray-500">Plan your visit around a celebration for a truly immersive stay!</p>
+      `;
+    } else if (type === 'stories') {
+      html = `
+        <img src="https://media.giphy.com/media/qwL7UCVtD8pNJFmkxA/giphy.gif" class="w-full h-48 object-cover rounded-lg mb-4">
+        <h3 class="text-2xl font-bold mb-4">Tourist Stories</h3>
+        <p class="text-gray-700 mb-3 italic">“We stayed in a tribal village in Odisha and learned how to make millet bread with the locals. It was magical.”</p>
+        <p class="text-gray-700 mb-3 italic">“Our host family in Himachal taught us their folk songs. We sang by the bonfire under the stars.”</p>
+        <p class="text-gray-700">Every traveler returns with a story. Come, write yours.</p>
+      `;
+    } else if (type === 'farmer') {
+      html = `
+        <img src="https://media.giphy.com/media/BkfLtyeJRsfB79RUBm/giphy.gif" class="w-full h-48 object-cover rounded-lg mb-4">
+        <h3 class="text-2xl font-bold mb-4">Meet the Farmer</h3>
+        <p class="text-gray-700 mb-3">Rajveer Singh from Punjab has practiced organic farming for over 20 years. He now mentors young villagers in zero-budget farming.</p>
+        <p class="text-gray-700">Listen to their stories, share a meal, and sow seeds of connection.</p>
+      `;
+    }
+
+    const closeButton = contentBox.querySelector('button').outerHTML;
+    contentBox.innerHTML = closeButton + html;
+    modal.classList.remove('hidden');
+  }
+
+  function closeCultureModal() {
+    const modal = document.getElementById('cultureModal');
+    const contentBox = document.getElementById('cultureModalContent');
+    contentBox.innerHTML = `
+      <button onclick="closeCultureModal()" class="absolute top-4 right-4 bg-black text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-800 transition">✕</button>
+    `;
+    modal.classList.add('hidden');
+  }
+
+  // Optional: close modal on background click
+  window.onclick = function (e) {
+    const modal = document.getElementById('cultureModal');
+    if (e.target === modal) closeCultureModal();
+  };
+</script>
+
+</body>
+</html>
